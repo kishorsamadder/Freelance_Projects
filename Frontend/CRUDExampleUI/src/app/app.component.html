@@ -1,0 +1,42 @@
+<div>
+    TOTAL JOBS: {{ (jobs$ | async).list.length }}
+
+    <form #f="ngForm" novalidate (ngSubmit)="save(f)">
+
+        Job Title :
+        <input type="text" name="jobTitle" [ngModel]="activeJob?.jobTitle" required #labelRef class="form-control">
+        Job Description :
+        <input type="text" name="jobDescription" [ngModel]="activeJob?.jobDescription" required class="form-control">
+        Job Category :
+        <input type="text" name="jobCategory" [ngModel]="activeJob?.jobCategory" required class="form-control">
+
+        <button class="btn btn-primary" type="submit" [disabled]="f.invalid">
+            {{activeJob?.jobId ? 'UPDATE' : 'ADD'  }}
+        </button>
+
+        <button class="btn btn-default" type="button" (click)="actions.resetActive()" *ngIf="activeJob?.jobId">ADD
+            NEW</button>
+    </form>
+
+    <hr />
+    Search : <input [(ngModel)]="searchText" placeholder="search text by job description">
+    
+        <table style="width:50%">
+            <tr>
+              <th>Job Title</th>
+              <th>Job Description</th>
+              <th>Job Category</th>
+            </tr>
+            <tr style="text-align: center;" *ngFor="let item of (jobs$ | async).list | filter : searchText"
+            [ngClass]="{active: item.jobId === (active$ | async)?.jobId}" (click)="actions.setActive(item.jobId)">
+              <td>{{item.jobTitle}}</td>
+              <td>{{item.jobDescription}}</td>
+              <td>{{item.jobCategory}}</td>
+              <td><button class="btn btn-xs btn-danger pull-right" (click)="actions.delete( item.jobId)">
+                delete
+            </button></td>
+            </tr>
+            
+          </table>
+        
+</div>
